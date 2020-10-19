@@ -15,7 +15,7 @@ import javax.inject.Inject;
  *
  * @author avbravo
  */
-@Named(value = "simpleController")
+@Named(value = "messageController")
 @ViewScoped
 public class MessageController implements Serializable{
 

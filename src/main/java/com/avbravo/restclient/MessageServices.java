@@ -15,7 +15,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
  *
  * @author avbravo
  */
-//@Path("/proxy")
+@Path("/message")
 @ApplicationScoped
 public class MessageServices {
     
