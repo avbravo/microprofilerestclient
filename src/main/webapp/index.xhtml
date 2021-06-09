@@ -2,18 +2,57 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+
+      xmlns:p="http://primefaces.org/ui"> 
     <h:head>
         <title>Facelet Title</title>
     </h:head>
     <h:body>
         <h:form id="form" prependId="false">
-            <p:commandButton value="Rest Client"
-                             update=":form:growl"
-                             action="#{messageController.load()}"/>
-            
             <p:growl id="growl"/>
-            
+            <h1>Microprofile Rest Client</h1>
+            <p:panelGrid columns="6" >
+                <p:commandButton value="getHello"
+                                 update=":form:growl, :form:countryPanel"
+                                 action="#{countryController.getHello()}"/>
+                
+                <p:commandButton value="first()"
+                                 update=":form:growl, :form:countryPanel"
+                                 action="#{countryController.first()}"/>
+
+
+                <p:commandButton value="findAll()"
+                                 update=":form:growl, :form:countryPanel"
+                                 action="#{countryController.findAll()}"/>
+                
+                <p:commandButton value="clear()"
+                                 update=":form:growl, :form:countryPanel"
+                                 action="#{countryController.clear()}"/>
+
+
+            </p:panelGrid>
+            <p:outputPanel id="countryPanel">
+                <p:outputLabel value="message: #{countryController.message}" />
+                <p:panelGrid columns="2" >
+                    <p:outputLabel value="id: #{countryController.country.id}"/>
+                    <p:outputLabel value="name: #{countryController.country.name}"/>
+                </p:panelGrid>
+                <p:dataTable var="item"
+                             value="#{countryController.countryList}">
+                    <p:column headerText="id">
+                        <p:outputLabel value="#{item.id}"/>
+
+                    </p:column>
+                    <p:column headerText="name">
+                        <p:outputLabel value="#{item.name}"/>
+
+                    </p:column>
+
+
+                </p:dataTable>
+            </p:outputPanel>
+
+
         </h:form>
     </h:body>
 </html>
