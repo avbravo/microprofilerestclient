@@ -7,7 +7,7 @@ package com.avbravo.restclient.controller;
 
 import com.avbravo.jmoordbutils.JsfUtil;
 import com.avbravo.restclient.services.CountryServices;
-import com.avbravo.restclient.domains.Country;
+import com.avbravo.restclient.entity.Country;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -23,22 +24,50 @@ import javax.ws.rs.core.Response;
  */
 @Named
 @ViewScoped
-public class CountryController implements Serializable{
-    
+public class CountryController implements Serializable {
+
     // <editor-fold defaultstate="collapsed" desc=" fields">
-    String message="";
+    String message = "";
     Country country = new Country();
+    Country countrySelected = new Country();
     List<Country> countryList = new ArrayList<>();
-            
+    String id = new String();
+    Boolean found = false;
+
+// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Microprofile Rest Client">
+    @Inject
+    CountryServices countryServices;
 // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc=" set/get">
+
+    public Boolean getFound() {
+        return found;
+    }
+
+    public void setFound(Boolean found) {
+        this.found = found;
+    }
     
-// <editor-fold defaultstate="collapsed" desc="Microprofile Rest Client">
-      @Inject
-  CountryServices countryServices;
-// </editor-fold>
-      
-          // <editor-fold defaultstate="collapsed" desc=" set/get">
+    
+    
+    
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Country getCountrySelected() {
+        return countrySelected;
+    }
+
+    public void setCountrySelected(Country countrySelected) {
+        this.countrySelected = countrySelected;
+    }
 
     public String getMessage() {
         return message;
@@ -63,55 +92,56 @@ public class CountryController implements Serializable{
     public void setCountryList(List<Country> countryList) {
         this.countryList = countryList;
     }
-      
-    
-    
-      
+
 // </editor-fold>
-  
     /**
      * Creates a new instance of SimpleController
      */
     public CountryController() {
     }
-    
-    
-    
+
     // <editor-fold defaultstate="collapsed" desc=" init">
     @PostConstruct
-    public void init(){
+    public void init() {
         countryList = countryServices.findAll();
     }
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="clear()">
-    public String clear(){
-        message="";
+
+    public String clear() {
+        message = "";
         country = new Country();
         return "";
     }
 // </editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="String getHello()">
+    // <editor-fold defaultstate="collapsed" desc="String prepareAdd()">
 
-    public String getHello(){
+    public String prepareAdd() {
+        message = "";
+        country = new Country();
+        return "";
+    }
+// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="String getHello()">
+    public String getHello() {
         try {
 
-  message =countryServices.getHello();
- 
+            message = countryServices.getHello();
+
         } catch (Exception e) {
 
             JsfUtil.errorDialog("getHello(", e.getLocalizedMessage());
         }
         return "";
     }
-    
+
     // </editor-fold>
-    
-      // <editor-fold defaultstate="collapsed" desc="String first()">
-    public String first(){
+    // <editor-fold defaultstate="collapsed" desc="String first()">
+    public String first() {
         try {
 
-            country =countryServices.first();
+            country = countryServices.first();
 
         } catch (Exception e) {
 
@@ -120,14 +150,12 @@ public class CountryController implements Serializable{
         return "";
     }
     // </editor-fold>
-    
-     
-    
-      // <editor-fold defaultstate="collapsed" desc="String getCountryXML()">
-    public String findAll(){
+
+    // <editor-fold defaultstate="collapsed" desc="String findAll()">
+    public String findAll() {
         try {
 
-           countryList =countryServices.findAll();
+            countryList = countryServices.findAll();
 
         } catch (Exception e) {
 
@@ -136,18 +164,108 @@ public class CountryController implements Serializable{
         return "";
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="save()">
-    public String add(){
-        Response response =countryServices.add(country);
-        if (response.getStatus() == 400) {
-            JsfUtil.errorMessage("No se pudo guardar");
-        }else{
-            JsfUtil.successMessage("Guardado exitosamente");
-            
+    public void add() {
+        try {
+
+            Response response = countryServices.add(countrySelected);
+
+            if (response.getStatus() == 400) {
+
+                JsfUtil.errorMessage("No se pudo guardar");
+
+            } else {
+                JsfUtil.successMessage("Guardado exitosamente");
+                findAll();
+                PrimeFaces.current().executeScript("PF('countryDialog').hide()");
+                PrimeFaces.current().ajax().update("form:growl", "form:countryDataTable");
+
+            }
+        } catch (Exception e) {
+            JsfUtil.errorDialog("add()", e.getLocalizedMessage());
+        }
+
+    }
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="update()">
+
+    public void update() {
+        try {
+
+            Response response = countryServices.update(countrySelected);
+
+            if (response.getStatus() == 400) {
+
+                JsfUtil.errorMessage("No se pudo Editar");
+
+            } else {
+                JsfUtil.successMessage("Editado exitosamente");
+                findAll();
+                PrimeFaces.current().executeScript("PF('countryDialog').hide()");
+                PrimeFaces.current().ajax().update("form:growl", "form:countryDataTable");
+
+            }
+        } catch (Exception e) {
+            JsfUtil.errorDialog("update()", e.getLocalizedMessage());
+        }
+
+    }
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="delete()">
+
+    public void delete() {
+        try {
+            Response response = countryServices.delete(countrySelected.getId());
+
+            if (response.getStatus() == 400) {
+
+                JsfUtil.errorMessage("No se pudo eliminar");
+
+            } else {
+                JsfUtil.successMessage("Eliminado exitosamente");
+                findAll();
+                PrimeFaces.current().executeScript("PF('countryDialog').hide()");
+                PrimeFaces.current().ajax().update("form:growl", "form:countryDataTable");
+
+            }
+        } catch (Exception e) {
+            JsfUtil.errorDialog("update()", e.getLocalizedMessage());
+        }
+
+    }
+// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc=" search">
+
+    public String search() {
+        try {
+
+            country = countryServices.findById(id);
+            if (country == null || country.getId() == null) {
+                JsfUtil.warningMessage("No lo encontro...");
+            } else {
+                JsfUtil.successMessage("Name =" + country.getName());
+                message = country.getName();
+            }
+        } catch (Exception e) {
+            JsfUtil.errorDialog("findAll()", e.getLocalizedMessage());
         }
         return "";
     }
 // </editor-fold>
-    
+
+    // <editor-fold defaultstate="collapsed" desc="openNew()">
+    public void openNew() {
+        found = false;
+        this.countrySelected = new Country();
+    }
+// </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="void prepareQuery()">
+    public String prepareQuery() {
+        found = true;
+        return "";
+      }
+// </editor-fold>
+
 }

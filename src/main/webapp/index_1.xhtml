@@ -15,13 +15,11 @@
             <p:toolbar>
                 <p:toolbarGroup>
                     <p:commandButton value="getHello"
-                                      process="@this"
                                      update=":form:growl, :form:countryPanel"
                                      action="#{countryController.getHello()}"/>
 
                     <p:commandButton value="new"
                                      icon="pi pi-plus"
-                                      process="@this"
                                      actionListener="#{countryController.openNew}"
                                      update=":form:countryContent" oncomplete="PF('countryDialog').show()"
                                      styleClass="ui-button-success" style="margin-right: .5rem">
@@ -31,19 +29,16 @@
 
 
                     <p:commandButton value="first()"
-                                     process="@this"
                                      update=":form:growl, :form:countryPanel"
                                      action="#{countryController.first()}"/>
 
 
                     <p:commandButton value="findAll()"
-                                     process="@this"
                                      update=":form:growl, :form:countryPanel"
                                      action="#{countryController.findAll()}"/>
 
                     <p:commandButton value="clear()"
                                      update=":form:growl, :form:countryPanel"
-                                     process="@this"
                                      action="#{countryController.clear()}"/>
 
                 </p:toolbarGroup>
@@ -51,22 +46,16 @@
 
             <p:outputPanel id="countryPanel">
                 <p:outputLabel value="message: #{countryController.message}" />
+                <p:outputLabel value="search id:" />
+                <p:inputText value="#{countryController.id}"/>
+                <p:commandButton value="search()"
+                                 update=":form:growl, :form:countryPanel"
+                                 action="#{countryController.search()}"/>
 
-                <p:panelGrid columns="2">
-                    <p:outputLabel value="search id:" />
-                    <p:inputText id="idsearch" value="#{countryController.id}"/>
-                    <p:commandButton value="searchid"
-                                     process=":form:idsearch @this"
-                                     update=":form:growl, :form:countryPanel"
-                                     action="#{countryController.search()}"/>
-                </p:panelGrid>
 
                 <p:dataTable var="item"
                              id="countryDataTable"
-                             value="#{countryController.countryList}"
-                             paginator="true"
-                             rows="10"
-                             >
+                             value="#{countryController.countryList}">
                     <p:column headerText="id">
                         <p:outputLabel value="#{item.id}"/>
 
@@ -78,12 +67,8 @@
                     <p:column exportable="false">
                         <p:commandButton icon="pi pi-pencil" update=":form:countryContent"
                                          oncomplete="PF('countryDialog').show()"
-                                         action="#{countryController.prepareQuery()}"
                                          styleClass="edit-button rounded-button ui-button-success" process="@this">
-                            
                             <f:setPropertyActionListener value="#{item}" target="#{countryController.countrySelected}"/>
-                            <f:setPropertyActionListener value="true" target="#{countryController.found}"/>
-                                        
                             <p:resetInput target=":form:countryContent"/>
                         </p:commandButton>
                     </p:column>
@@ -113,15 +98,15 @@
                 <f:facet name="footer">
                     <p:commandButton value="Save" icon="pi pi-check" actionListener="#{countryController.add()}"
                                      update="countryContent" process="countryContent @this"
-                                     rendered="#{!countryController.found}"
+                                     rendered="#{empty countryController.countrySelected.id}"
                                      />
                     <p:commandButton value="Update" icon="pi pi-check" actionListener="#{countryController.update()}"
                                      update="countryContent" process="countryContent @this"
-                               
+
                                      />
                     <p:commandButton value="Delete" icon="pi pi-check" actionListener="#{countryController.delete()}"
                                      update="countryContent" process="countryContent @this"
-                                   
+
                                      />
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('countryDialog').hide()"
                                      class="ui-button-secondary"/>
