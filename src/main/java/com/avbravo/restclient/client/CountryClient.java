@@ -7,6 +7,7 @@ package com.avbravo.restclient.client;
 
 ;
 import com.avbravo.restclient.entity.Country;
+import java.util.Base64;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,6 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 /**
@@ -26,8 +28,15 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
  */
 @RegisterRestClient(baseUri = "http://localhost:8080/microprofilerestclientserver/resources")
 @Path("/message")
+@ClientHeaderParam(name = "Authorization", value = "{lookupAuth}")
 public interface CountryClient {
 
+     default String lookupAuth() {
+    return "Basic " + 
+//         Base64.getEncoder().encodeToString("user:pass".getBytes());
+         Base64.getEncoder().encodeToString("E$g3t1.q4@n5:s7_$4wnT1den4=/pana1e1".getBytes());
+  }
+    
     @GET
     @Path("/text")
     public String getHello();
@@ -57,12 +66,7 @@ public interface CountryClient {
     public Response update(Country  country );
     
     
-//    @DELETE
-//    @Path("/delete")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response delete(Country country);
-//    
-     @DELETE
+    @DELETE
     @Path("/delete/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") String id) ;

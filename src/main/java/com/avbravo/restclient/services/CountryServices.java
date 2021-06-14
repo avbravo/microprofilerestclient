@@ -72,14 +72,7 @@ public class CountryServices {
     }
     
     
-//    @DELETE
-//    @Path("/delete")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response delete(Country country){
-//        return service.delete(country);
-//    }
-    
-      @DELETE
+     @DELETE
     @Path("/delete/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") String id) {
