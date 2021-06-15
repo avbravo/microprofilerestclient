@@ -28,7 +28,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
  */
 @RegisterRestClient(baseUri = "http://localhost:8080/microprofilerestclientserver/resources")
 @Path("/message")
-@ClientHeaderParam(name = "Authorization", value = "{lookupAuth}")
+//@ClientHeaderParam(name = "Authorization", value = "{lookupAuth}")
 public interface CountryClient {
 
      default String lookupAuth() {
