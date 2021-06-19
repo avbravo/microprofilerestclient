@@ -5,7 +5,7 @@
  */
 package com.avbravo.restclient.client;
 
-;
+
 import com.avbravo.restclient.entity.Country;
 import java.util.Base64;
 import java.util.List;
