@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.avbravo.restclient.entity;
+package com.avbravo.restclient.model;
 
 import com.avbravo.jmoordb.anotations.Id;
 

@@ -7,7 +7,7 @@ package com.avbravo.restclient.controller;
 
 import com.avbravo.jmoordbutils.JsfUtil;
 import com.avbravo.restclient.services.CountryServices;
-import com.avbravo.restclient.entity.Country;
+import com.avbravo.restclient.model.Country;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

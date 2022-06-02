@@ -6,7 +6,7 @@
 package com.avbravo.restclient.services;
 
 import com.avbravo.restclient.client.CountryClient;
-import com.avbravo.restclient.entity.Country;
+import com.avbravo.restclient.model.Country;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
